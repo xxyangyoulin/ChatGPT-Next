@@ -41,6 +41,3 @@ dev
 
 # docker-compose env files
 .env
-
-*.key
-*.key.pub
