@@ -4,8 +4,7 @@ import GithubIcon from "../icons/github.svg";
 import ResetIcon from "../icons/reload.svg";
 import { ISSUE_URL } from "../constant";
 import Locale from "../locales";
-import { showConfirm } from "./ui-lib";
-import { useSyncStore } from "../store/sync";
+import { downloadAs } from "../utils";
 
 interface IErrorBoundaryState {
   hasError: boolean;
@@ -26,7 +25,10 @@ export class ErrorBoundary extends React.Component<any, IErrorBoundaryState> {
 
   clearAndSaveData() {
     try {
-      useSyncStore.getState().export();
+      downloadAs(
+        JSON.stringify(localStorage),
+        "chatgpt-next-web-snapshot.json",
+      );
     } finally {
       localStorage.clear();
       location.reload();
@@ -55,11 +57,10 @@ export class ErrorBoundary extends React.Component<any, IErrorBoundaryState> {
             <IconButton
               icon={<ResetIcon />}
               text="Clear All Data"
-              onClick={async () => {
-                if (await showConfirm(Locale.Settings.Danger.Reset.Confirm)) {
-                  this.clearAndSaveData();
-                }
-              }}
+              onClick={() =>
+                confirm(Locale.Settings.Actions.ConfirmClearAll) &&
+                this.clearAndSaveData()
+              }
               bordered
             />
           </div>

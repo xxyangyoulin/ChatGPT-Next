@@ -3,17 +3,17 @@ export const ChatControllerPool = {
   controllers: {} as Record<string, AbortController>,
 
   addController(
-    sessionId: string,
-    messageId: string,
+    sessionIndex: number,
+    messageId: number,
     controller: AbortController,
   ) {
-    const key = this.key(sessionId, messageId);
+    const key = this.key(sessionIndex, messageId);
     this.controllers[key] = controller;
     return key;
   },
 
-  stop(sessionId: string, messageId: string) {
-    const key = this.key(sessionId, messageId);
+  stop(sessionIndex: number, messageId: number) {
+    const key = this.key(sessionIndex, messageId);
     const controller = this.controllers[key];
     controller?.abort();
   },
@@ -26,12 +26,12 @@ export const ChatControllerPool = {
     return Object.values(this.controllers).length > 0;
   },
 
-  remove(sessionId: string, messageId: string) {
-    const key = this.key(sessionId, messageId);
+  remove(sessionIndex: number, messageId: number) {
+    const key = this.key(sessionIndex, messageId);
     delete this.controllers[key];
   },
 
-  key(sessionId: string, messageIndex: string) {
-    return `${sessionId},${messageIndex}`;
+  key(sessionIndex: number, messageIndex: number) {
+    return `${sessionIndex},${messageIndex}`;
   },
 };
